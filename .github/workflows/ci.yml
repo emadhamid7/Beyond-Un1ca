@@ -133,3 +133,19 @@ jobs:
 
       - name: Build ROM
         run: ./scripts/make_rom.sh
+        
+      - name: Install rclone
+        run: |
+          sudo apt update
+          sudo apt install -y rclone
+
+      - name: Restore rclone config
+        run: |
+          mkdir -p ~/.config/rclone
+          cat > ~/.config/rclone/rclone.conf << 'EOF'
+          ${{ secrets.RCLONE_CONF }}
+          EOF
+          
+      - name: Upload ROM to Google Drive
+        run: |
+          rclone copy out mydrive:UN1CA --include "*.zip" --progress
