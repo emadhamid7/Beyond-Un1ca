@@ -210,11 +210,6 @@ SYSTEM_DEBLOAT+="
 system/app/SamsungCalendar
 "
 
-# Samsung Clock
-SYSTEM_DEBLOAT+="
-system/app/ClockPackage
-"
-
 # Samsung Free
 SYSTEM_DEBLOAT+="
 system/app/MinusOnePage
@@ -332,7 +327,39 @@ system/app/VoiceAccess
 system/etc/sysconfig/feature-a11y-preload-voacc.xml
 "
 
-# YouTube
+# Extra Debloat from Product
 PRODUCT_DEBLOAT+="
 app/YouTube
+app/com.google.mainline.adservices
+priv-app/CarrierWifi
+priv-app/GoogleOneTimeInitializer
+priv-app/GoogleRestore
+priv-app/Turbo
+"
+
+# Extra Debloat from System
+SYSTEM_DEBLOAT+="
+system/app/CarrierDefaultApp
+system/app/ccinfo
+system/app/ChromeCustomizations
+system/app/Fast
+system/app/GearManagerStub
+system/app/KidsHome_Installer
+system/app/ParentalCare
+system/app/Rampart
+system/app/SafetyInformation
+system/app/SilentLog
+system/app/SimAppDialog
+system/app/WifiGuider
+system/priv-app/BudsUniteManager
+system/priv-app/DigitalWellbeing
+system/priv-app/EnhancedAttestationAgent
+system/priv-app/ImsLogger
+system/priv-app/OdaService
+system/priv-app/OMCAgent5
+system/priv-app/SamsungBilling
+system/priv-app/SamsungPositioning
+system/priv-app/SKMSAgent
+system/priv-app/SPPPushClient
+system/priv-app/StickerFaceARAvatar
 "
