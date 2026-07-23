@@ -2,6 +2,16 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Target device"
+        required: true
+        default: "beyond0lte"
+        type: choice
+        options:
+          - beyond0lte
+          - o1s
+          - r9s
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,11 +49,10 @@ jobs:
       - name: Generate CI matrix
         id: generate-matrix
         run: |
-          matrix="$(find target -mindepth 1 -maxdepth 1 -type d -printf '%f\n' \
-            | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          matrix=$(jq -cn --arg t "${{ github.event.inputs.target }}" '[$t]')
           echo "$matrix"
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
-
+        
   build:
     name: Build
     needs: [shellcheck, generate-matrix]
