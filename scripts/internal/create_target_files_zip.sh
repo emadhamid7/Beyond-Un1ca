@@ -139,20 +139,10 @@ if $TARGET_USE_DYNAMIC_PARTITIONS; then
     BUILD_SUPER_EMPTY
 fi
 
-if [ -d "$WORK_DIR/kernel" ]; then
-    KERNEL_BINS="boot.img dt.img dtbo.img init_boot.img vendor_boot.img"
-
-    for f in $KERNEL_BINS; do
-        [ ! -f "$WORK_DIR/kernel/$f" ] && continue
-
-        LOG_STEP_IN "- Copying $f"
-        EVAL "cp -a \"$WORK_DIR/kernel/$f\" \"$TMP_DIR/$f\"" || exit 1
-        if ! $TARGET_DISABLE_AVB_SIGNING; then
-            SIGN_IMAGE_WITH_AVB "$TMP_DIR/$f" || exit 1
-        fi
-        LOG_STEP_OUT
-    done
-fi
+# Skip packaging kernel images.
+# This ROM is intended to be flashed together with a custom kernel
+# which already contains the correct DTB/DTBO and partition layout.
+LOG "- Skipping kernel images (boot/dtb/dtbo/init_boot/vendor_boot)"
 
 LOG "- Generating build_info.txt"
 GENERATE_BUILD_INFO
