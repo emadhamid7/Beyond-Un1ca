@@ -102,11 +102,6 @@ PRODUCT_DEBLOAT+="
 app/AssistantShell
 "
 
-# Google Chrome
-PRODUCT_DEBLOAT+="
-app/Chrome
-"
-
 # Google Duo
 PRODUCT_DEBLOAT+="
 app/DuoStub
