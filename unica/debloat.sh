@@ -141,12 +141,9 @@ system/priv-app/LedCoverService
 "
 
 # Link to Windows
-# Replace full apk with stub apk to save space
 SYSTEM_DEBLOAT+="
 system/priv-app/YourPhone_P1_5
 "
-
-ADD_TO_WORK_DIR "gta9pxxx" "system" "system/priv-app/YourPhone_Stub/YourPhone_Stub.apk" 0 0 644 "u:object_r:system_file:s0"
 
 # Live Transcribe
 SYSTEM_DEBLOAT+="
@@ -341,7 +338,6 @@ system/etc/preferred-apps/com.samsung.android.bixby.agent.xml
 # Extra Debloat from Product
 PRODUCT_DEBLOAT+="
 app/YouTube
-app/com.google.mainline.adservices
 priv-app/AiWallpaper
 priv-app/FamilyLinkParentalControls
 priv-app/CarrierWifi
