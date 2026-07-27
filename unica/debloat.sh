@@ -324,10 +324,26 @@ system/app/VoiceAccess
 system/etc/sysconfig/feature-a11y-preload-voacc.xml
 "
 
+# Bixby
+SYSTEM_DEBLOAT+="
+system/app/BixbyWakeup
+system/app/VisionIntelligence3.7
+system/priv-app/Bixby
+system/priv-app/BixbyInterpreter
+system/priv-app/BixbyVisionFramework3.5
+system/etc/sysconfig/bixbyagent.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.bixby.agent.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.bixby.wakeup.xml
+system/etc/permissions/signature-permissions-com.samsung.android.bixby.agent.xml
+system/etc/preferred-apps/com.samsung.android.bixby.agent.xml
+"
+
 # Extra Debloat from Product
 PRODUCT_DEBLOAT+="
 app/YouTube
 app/com.google.mainline.adservices
+priv-app/AiWallpaper
+priv-app/FamilyLinkParentalControls
 priv-app/CarrierWifi
 priv-app/GoogleOneTimeInitializer
 priv-app/GoogleRestore
@@ -343,6 +359,7 @@ system/app/Fast
 system/app/GearManagerStub
 system/app/GooglePrintRecommendationService
 system/app/KidsHome_Installer
+system/app/PrivateAccessTokens
 system/app/ParentalCare
 system/app/Rampart
 system/app/SafetyInformation
