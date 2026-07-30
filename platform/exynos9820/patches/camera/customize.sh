@@ -1,7 +1,5 @@
 # Delete unnecessary libs 
 DELETE_FROM_WORK_DIR "system" "system/lib64/libdualcam_portraitlighting_gallery_360.so"
-DELETE_FROM_WORK_DIR "system" "system/lib64/libDualCamBokehCapture.camera.samsung.so"
-
 DELETE_FROM_WORK_DIR "system" "system/priv-app/SamsungCamera/oat"
 DELETE_FROM_WORK_DIR "system" "system/priv-app/SamsungCamera/SamsungCamera.apk.prof"
 DELETE_FROM_WORK_DIR "system" "system/app/FilterProvider/oat"
