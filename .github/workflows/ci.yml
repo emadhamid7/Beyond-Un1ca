@@ -10,8 +10,9 @@ on:
         type: choice
         options:
           - beyond0lte
-          - o1s
-          - r9s
+          - beyond1lte
+          - beyond2lte
+          - beyondx
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
