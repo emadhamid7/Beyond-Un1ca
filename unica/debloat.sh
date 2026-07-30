@@ -364,7 +364,6 @@ system/priv-app/BudsUniteManager
 system/priv-app/DigitalWellbeing
 system/priv-app/EnhancedAttestationAgent
 system/priv-app/ImsLogger
-system/priv-app/LiveEffectService
 system/priv-app/NetworkDiagnostic
 system/priv-app/OdaService
 system/priv-app/OMCAgent5
