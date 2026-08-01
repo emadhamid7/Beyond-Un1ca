@@ -6,13 +6,11 @@ on:
       target:
         description: "Target device"
         required: true
-        default: "beyond0lte"
+        default: "m62"
         type: choice
         options:
           - beyond0lte
-          - beyond1lte
-          - beyond2lte
-          - beyondx
+          - m62
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
