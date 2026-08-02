@@ -3,31 +3,22 @@ From: Salvo Giangreco <giangrecosalvo9@gmail.com>
 Date: Sat, 13 Sep 2025 23:29:53 +0300
 Subject: [PATCH] Add back right cutout support
 
-Adjusted for the current beyond0lte SystemUI.apk baseline: the
-IndicatorGardenAlgorithm.smali hunk has been regenerated because this
-build's IndicatorGardenAlgorithm already ships the 3-arg
-getLeftContainerMaxWidth/getRightContainerMaxWidth overloads upstream
-(and uses .registers-style smali rather than .locals). All other
-files (Dagger wiring, Factory, and the new RightCutout class) are
-unchanged from the original patch, since those already applied
-cleanly.
-
 Change-Id: Ib98ccd4e8ac8844953f4c91cf82e2f8eb96f720c
 Signed-off-by: ExtremeXT <75576145+ExtremeXT@users.noreply.github.com>
 ---
  ...SysUIComponentImpl$SwitchingProvider.smali |  14 +-
  ...omponent$ReferenceSysUIComponentImpl.smali |  32 ++
- .../phone/IndicatorGardenAlgorithm.smali      |  94 +++++-
+ .../phone/IndicatorGardenAlgorithm.smali      |  79 ++++-
  .../IndicatorGardenAlgorithmFactory.smali     |  21 +-
  .../IndicatorGardenAlgorithmRightCutout.smali | 321 ++++++++++++++++++
- 5 files changed, 472 insertions(+), 10 deletions(-)
+ 5 files changed, 457 insertions(+), 10 deletions(-)
  create mode 100644 smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithmRightCutout.smali
 
 diff --git a/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl$SwitchingProvider.smali b/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl$SwitchingProvider.smali
 index 8b970558..e1997728 100644
 --- a/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl$SwitchingProvider.smali
 +++ b/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl$SwitchingProvider.smali
-@@ -91052,13 +91052,19 @@
+@@ -91405,13 +91405,19 @@
  
      move-result-object v4
  
@@ -55,7 +46,7 @@ diff --git a/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRoo
 index 127fe7b9..72af9024 100644
 --- a/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl.smali
 +++ b/smali_classes2/com/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl.smali
-@@ -25437,6 +25437,16 @@
+@@ -25441,6 +25441,16 @@
      return-object p0
  .end method
  
@@ -72,7 +63,7 @@ index 127fe7b9..72af9024 100644
  .method public static bridge synthetic -$$Nest$mindicatorGardenAlgorithmSidelingCenterCutout(Lcom/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl;)Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithmSidelingCenterCutout;
      .locals 0
  
-@@ -35154,6 +35164,28 @@
+@@ -35194,6 +35190,28 @@
      return-object v0
  .end method
  
@@ -100,259 +91,17 @@ index 127fe7b9..72af9024 100644
 +
  .method public final indicatorGardenAlgorithmSidelingCenterCutout()Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithmSidelingCenterCutout;
      .locals 3
- 
+
 diff --git a/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithm.smali b/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithm.smali
 index ca1dd189..3f362c57 100644
 --- a/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithm.smali
 +++ b/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithm.smali
-@@ -209,36 +209,58 @@
-     return p0
- .end method
- 
-+.method public final getLeftContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;)I
-+    .registers 4
-+
-+    invoke-virtual {p0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getDefaultSidePadding()I
-+
-+    move-result v0
-+
-+    invoke-virtual {p0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getDefaultSidePadding()I
-+
-+    move-result v1
-+
-+    invoke-virtual {p0, p1, v0, v1}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getLeftContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;II)I
-+
-+    move-result p0
-+
-+    return p0
-+.end method
-+
- .method public final getLeftContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;II)I
--    .registers 6
-+    .registers 8
-+
-+    move v0, p2
-+
-+    move v1, p3
- 
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getCenterContainer()Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;
- 
--    move-result-object v0
-+    move-result-object v2
- 
-     iget-object p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->inputProperties:Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;
- 
--    if-eqz v0, :cond_21
-+    if-eqz v2, :cond_23
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->isGardenVisible()Z
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->isGardenVisible()Z
- 
--    move-result v1
-+    move-result v3
- 
--    if-eqz v1, :cond_21
-+    if-eqz v3, :cond_23
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
- 
--    move-result v1
-+    move-result v3
- 
--    if-lez v1, :cond_21
-+    if-lez v3, :cond_23
- 
-     iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
- 
-     div-int/lit8 p0, p0, 0x2
- 
--    sub-int/2addr p0, p2
-+    sub-int/2addr p0, v0
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
- 
-     move-result p1
- 
-@@ -248,48 +270,66 @@
- 
-     return p0
- 
--    :cond_21
-+    :cond_23
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getRightContainer()Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;
- 
--    move-result-object v0
-+    move-result-object v2
- 
--    if-eqz v0, :cond_2c
-+    if-eqz v2, :cond_2e
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
- 
--    move-result v0
-+    move-result v2
- 
--    goto :goto_2d
-+    goto :goto_2f
- 
--    :cond_2c
--    const/4 v0, 0x0
-+    :cond_2e
-+    const/4 v2, 0x0
- 
--    :goto_2d
-+    :goto_2f
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getEssentialRightWidth()I
- 
--    move-result v1
-+    move-result v3
- 
--    invoke-static {v1, v0}, Ljava/lang/Math;->max(II)I
-+    invoke-static {v3, v2}, Ljava/lang/Math;->max(II)I
- 
--    move-result v0
-+    move-result v2
- 
--    add-int/2addr p2, p3
-+    add-int/2addr v0, v1
- 
--    iget p3, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
-+    iget v1, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
- 
--    sub-int/2addr p3, v0
-+    sub-int/2addr v1, v2
- 
--    sub-int/2addr p3, p2
-+    sub-int/2addr v1, v0
- 
-     iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->defaultCenterPadding:I
- 
--    sub-int/2addr p3, p0
-+    sub-int/2addr v1, p0
- 
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getEssentialLeftWidth()I
- 
-     move-result p0
- 
--    invoke-static {p3, p0}, Ljava/lang/Math;->max(II)I
-+    invoke-static {v1, p0}, Ljava/lang/Math;->max(II)I
-+
-+    move-result p0
-+
-+    return p0
-+.end method
-+
-+.method public final getRightContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;)I
-+    .registers 4
-+
-+    invoke-virtual {p0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getDefaultSidePadding()I
-+
-+    move-result v0
-+
-+    invoke-virtual {p0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getDefaultSidePadding()I
-+
-+    move-result v1
-+
-+    invoke-virtual {p0, p1, v0, v1}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getRightContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;II)I
- 
-     move-result p0
- 
-@@ -297,35 +337,39 @@
- .end method
- 
- .method public final getRightContainerMaxWidth(Lcom/android/systemui/statusbar/phone/IndicatorGarden;II)I
--    .registers 6
-+    .registers 8
-+
-+    move v0, p2
-+
-+    move v1, p3
- 
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getCenterContainer()Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;
- 
--    move-result-object v0
-+    move-result-object v2
- 
-     iget-object p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->inputProperties:Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;
- 
--    if-eqz v0, :cond_21
-+    if-eqz v2, :cond_23
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->isGardenVisible()Z
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->isGardenVisible()Z
- 
--    move-result v1
-+    move-result v3
- 
--    if-eqz v1, :cond_21
-+    if-eqz v3, :cond_23
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
- 
--    move-result v1
-+    move-result v3
- 
--    if-lez v1, :cond_21
-+    if-lez v3, :cond_23
- 
-     iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
- 
-     div-int/lit8 p0, p0, 0x2
- 
--    sub-int/2addr p0, p3
-+    sub-int/2addr p0, v1
- 
--    invoke-interface {v0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
-+    invoke-interface {v2}, Lcom/android/systemui/statusbar/phone/IndicatorGardenContainer;->getGardenWidth()I
- 
-     move-result p1
- 
-@@ -335,34 +379,81 @@
- 
-     return p0
- 
--    :cond_21
--    iget v0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
-+    :cond_23
-+    iget v2, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->statusBarWidth:I
- 
--    add-int/2addr p2, p3
-+    add-int/2addr v0, v1
- 
--    sub-int/2addr v0, p2
-+    sub-int/2addr v2, v0
- 
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getEssentialLeftWidth()I
- 
--    move-result p2
-+    move-result v0
- 
--    sub-int/2addr v0, p2
-+    sub-int/2addr v2, v0
- 
-     iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->defaultCenterPadding:I
- 
--    sub-int/2addr v0, p0
-+    sub-int/2addr v2, p0
- 
-     invoke-interface {p1}, Lcom/android/systemui/statusbar/phone/IndicatorGarden;->getEssentialRightWidth()I
- 
-     move-result p0
- 
--    invoke-static {v0, p0}, Ljava/lang/Math;->max(II)I
-+    invoke-static {v2, p0}, Ljava/lang/Math;->max(II)I
- 
-     move-result p0
- 
+@@ -363,6 +363,53 @@
      return p0
  .end method
  
 +.method public final getSideCutoutPadding(II)I
-+    .registers 5
++    .locals 2
 +
 +    invoke-virtual {p0}, Lcom/android/systemui/statusbar/phone/IndicatorGardenAlgorithm;->getDefaultSidePadding()I
 +
@@ -362,9 +111,9 @@ index ca1dd189..3f362c57 100644
 +
 +    iget v1, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->rotation:I
 +
-+    if-nez v1, :cond_20
++    if-nez v1, :cond_1
 +
-+    if-lez p1, :cond_19
++    if-lez p1, :cond_0
 +
 +    iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->cutoutSidePaddingD:I
 +
@@ -380,27 +129,27 @@ index ca1dd189..3f362c57 100644
 +
 +    move-result p0
 +
-+    goto :goto_1f
++    goto :goto_0
 +
-+    :cond_19
++    :cond_0
 +    iget p0, p0, Lcom/android/systemui/statusbar/phone/IndicatorGardenInputProperties;->cornerPaddingC:I
 +
 +    invoke-static {p0, v0}, Ljava/lang/Math;->max(II)I
 +
 +    move-result p0
 +
-+    :goto_1f
++    :goto_0
 +    return p0
 +
-+    :cond_20
++    :cond_1
 +    add-int/2addr v0, p2
 +
 +    return v0
 +.end method
 +
  .method public hasCameraBottomMargin()Z
-     .registers 1
- 
+     .locals 0
+
 diff --git a/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithmFactory.smali b/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithmFactory.smali
 index e2fc9859..fa699a39 100644
 --- a/smali_classes3/com/android/systemui/statusbar/phone/IndicatorGardenAlgorithmFactory.smali
@@ -790,3 +539,4 @@ index 00000000..84209118
 +.end method
 -- 
 2.51.0
+
