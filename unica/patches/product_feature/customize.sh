@@ -420,7 +420,7 @@ fi
 if [[ "$SOURCE_DISPLAY_CUTOUT_TYPE" != "$TARGET_DISPLAY_CUTOUT_TYPE" ]]; then
     if [[ "$TARGET_DISPLAY_CUTOUT_TYPE" == "right" ]]; then
         APPLY_PATCH "system_ext" "priv-app/SystemUI/SystemUI.apk" \
-            "$MODPATH/product_feature/cutout/SystemUI.apk/0001-Add-right-cutout-support.patch"
+            "$MODPATH/cutout/SystemUI.apk/0001-Add-right-cutout-support.patch"
     else
         # TODO handle this condition
         LOG_MISSING_PATCHES "SOURCE_DISPLAY_CUTOUT_TYPE" "TARGET_DISPLAY_CUTOUT_TYPE"
