@@ -51,6 +51,7 @@ system/etc/permissions/privapp-permissions-com.samsung.android.app.esimkeystring
 system/etc/permissions/privapp-permissions-com.samsung.euicc.xml
 system/etc/sysconfig/preinstalled-packages-com.samsung.android.app.esimkeystring.xml
 system/etc/sysconfig/preinstalled-packages-com.samsung.euicc.xml
+system/priv-app/EsimClient
 system/priv-app/EsimKeyString
 system/priv-app/EuiccService
 "
@@ -360,6 +361,7 @@ system/app/SmartSwitchAgent
 system/app/SmartSwitchStub
 system/app/SmartTethering
 system/app/WifiGuider
+system/app/WifiAiService
 system/priv-app/BudsUniteManager
 system/priv-app/DigitalWellbeing
 system/priv-app/EnhancedAttestationAgent
@@ -374,3 +376,24 @@ system/priv-app/SKMSAgent
 system/priv-app/SPPPushClient
 system/priv-app/StickerFaceARAvatar
 "
+
+# Experimental 9820 Quick share bs
+SYSTEM_DEBLOAT+="
+system/app/AllShareAware
+system/app/MdxKitService
+system/priv-app/BeaconManager
+system/priv-app/EasySetup
+system/priv-app/SamsungExperienceService
+system/priv-app/ShareLive
+"
+
+# Experimental misc
+SYSTEM_DEBLOAT+="
+system/app/BBCAgent
+system/app/MDMApp
+system/app/SamsungTTS
+system/app/UniversalMDMClient
+system/priv-app/SingleTakeService
+system/priv-app/SmartThingsKit
+"
+
