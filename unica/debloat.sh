@@ -391,7 +391,6 @@ system/priv-app/ShareLive
 SYSTEM_DEBLOAT+="
 system/app/BBCAgent
 system/app/MDMApp
-system/app/SamsungTTS
 system/app/UniversalMDMClient
 system/priv-app/SingleTakeService
 system/priv-app/SmartThingsKit
