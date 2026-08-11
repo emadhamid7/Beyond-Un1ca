@@ -373,6 +373,7 @@ system/priv-app/SamsungBilling
 system/priv-app/SamsungPositioning
 system/priv-app/SecAppSeparation
 system/priv-app/SKMSAgent
+system/priv-app/SmartSwitchAssistant
 system/priv-app/SPPPushClient
 system/priv-app/StickerFaceARAvatar
 "
@@ -394,5 +395,8 @@ system/app/MDMApp
 system/app/UniversalMDMClient
 system/priv-app/SingleTakeService
 system/priv-app/SmartThingsKit
+system/priv-app/SamsungIntelliVoiceServices
+system/priv-app/SamsungSmartSuggestions
+system/priv-app/SpriteWallpaper
 "
 
