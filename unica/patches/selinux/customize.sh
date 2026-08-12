@@ -15,6 +15,12 @@ DUPLICATES+="
 init.svc.vendor.wvkprov_server_hal
 "
 
+# Exynos 9820 additions
+ENTRIES+="
+perf_prop
+qb_id_prop
+"
+
 # One UI 7.0 additions
 ENTRIES+="
 attiqi_app
